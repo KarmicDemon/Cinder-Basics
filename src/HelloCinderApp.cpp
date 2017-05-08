@@ -1,28 +1,46 @@
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
+#include "cinder/Rand.h"
+#include <vector>
 
 using namespace ci;
 using namespace ci::app;
 using namespace gl;
 using namespace std;
 
-class HelloCinderApp : public App {
-  public:
-	void setup() override;
-	void mouseDown(MouseEvent event) override;
-	void update() override;
-	void draw() override;
+class Circle {
+public: 
+	Circle(vec2 center, float radius, Color fillColor) 
+		: center(center), radius(radius), fillColor(fillColor) {}
+
+	void draw() {
+		color(fillColor);
+		drawSolidCircle(center, radius);	
+	}
+ private:
+	Color fillColor;
+	float radius;
+	vec2 center;
 };
 
-void HelloCinderApp::setup() {
-}
+class HelloCinderApp : public App {
+public:
+	void draw() override;
+	void keyDown(KeyEvent event) override;
+	void mouseDown(MouseEvent event) override;
+	void setup() override;
+	void update() override;
+ private:
+	vector<Circle> circles;
 
-void HelloCinderApp::mouseDown(MouseEvent event) {
-}
+	Circle generateRandomCircleAt(vec2 center) {
+		float radius = Rand::randFloat(10.0f, 50.0f);
+		Color color(CM_HSV, Rand::randFloat(0.0f, 1.0f), 1.0f, 1.0f);
 
-void HelloCinderApp::update() {
-}
+		return Circle(center, radius, color);
+	}
+};
 
 void HelloCinderApp::draw() {
 	/** Figuring stuff out
@@ -72,6 +90,43 @@ void HelloCinderApp::draw() {
 	color(italy_r);
 	drawSolidRect(Rectf( (2.0f / 3.0f) * w, 0, w, h));
 	**/
+
+	
+	//uses user input
+	clear(Color(0, 0, 0));
+
+	for (auto& circle : circles) {
+		circle.draw();
+	}
+
 }
+
+void HelloCinderApp::keyDown(KeyEvent event) {
+	if (event.getChar() == 'c' || event.getChar() == 'C') {
+		circles.clear();
+	}
+
+	return;
+}
+
+void HelloCinderApp::mouseDown(MouseEvent event) {
+	if (event.isLeft()) {
+		circles.push_back(generateRandomCircleAt(event.getPos()));
+		return;
+	}
+
+	if (event.isRight() && !circles.empty()) {
+		circles.pop_back();
+		return;
+	}
+}
+
+void HelloCinderApp::setup() {
+	Rand::randomize();
+}
+
+void HelloCinderApp::update() {
+}
+
 
 CINDER_APP(HelloCinderApp, RendererGl)
