@@ -1,12 +1,13 @@
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
+#include "cinder/gl/Texture.h"
+#include "cinder/ImageIo.h"
 #include "cinder/Rand.h"
 #include <vector>
 
 using namespace ci;
 using namespace ci::app;
-using namespace gl;
 using namespace std;
 
 class Circle {
@@ -15,10 +16,10 @@ public:
 		: center(center), radius(radius), fillColor(fillColor) {}
 
 	void draw() {
-		color(fillColor);
-		drawSolidCircle(center, radius);	
+		gl::color(fillColor);
+		gl::drawSolidCircle(center, radius);	
 	}
- private:
+private:
 	Color fillColor;
 	float radius;
 	vec2 center;
@@ -31,7 +32,8 @@ public:
 	void mouseDown(MouseEvent event) override;
 	void setup() override;
 	void update() override;
- private:
+
+private:
 	vector<Circle> circles;
 
 	Circle generateRandomCircleAt(vec2 center) {
@@ -42,34 +44,38 @@ public:
 	}
 };
 
+void HelloCinderApp::setup() {
+	Rand::randomize();
+}
+
 void HelloCinderApp::draw() {
 	/** Figuring stuff out
 	// get time-oscillating hue value, "normalized" in range [0, 1]
 	float hue = sin(getElapsedSeconds() * 0.5f + 0.5f);
-	clear(Color(CM_HSV, hue, 1, 1));
+	gl::clear(Color(CM_HSV, hue, 1, 1));
 	*/
 
 
 	/**
 	//makes 2 criss-cross lines
-	clear(Color(0, 0, 0));
+	gl::clear(Color(0, 0, 0));
 
 	lineWidth(5);
 
-	color(Color(1, 1, 0));
-	drawLine(vec2(0, 0), vec2(getWindowWidth(), getWindowHeight()));
+	gl::color(Color(1, 1, 0));
+	gl::drawLine(vec2(0, 0), vec2(getWindowWidth(), getWindowHeight()));
 
-	color(Color(0, 0, 1));
-	drawLine(vec2(getWindowWidth(), 0), vec2(0, getWindowHeight()));
+	gl::color(Color(0, 0, 1));
+	gl::drawLine(vec2(getWindowWidth(), 0), vec2(0, getWindowHeight()));
 	*/
 
 
 	/**
 	//makes Japan flag
-	clear(Color(1, 1, 1));
+	gl::clear(Color(1, 1, 1));
 
-	color(Color(1, 0, 0));
-	drawSolidCircle(getWindowCenter(), getWindowWidth() / 6.0f, 100000);
+	gl::color(Color(1, 0, 0));
+	gl::drawSolidCircle(getWindowCenter(), getWindowWidth() / 6.0f, 100000);
 	**/
 
 
@@ -82,23 +88,26 @@ void HelloCinderApp::draw() {
 	const int h = getWindowHeight();
 	const int w = getWindowWidth();
 
-	clear(italy_w);
+	gl::clear(italy_w);
 
-	color(italy_g);
-	drawSolidRect(Rectf(0, 0, w / 3.0f, h));
+	gl::color(italy_g);
+	gl::drawSolidRect(Rectf(0, 0, w / 3.0f, h));
 
-	color(italy_r);
-	drawSolidRect(Rectf( (2.0f / 3.0f) * w, 0, w, h));
+	gl::color(italy_r);
+	gl::drawSolidRect(Rectf( (2.0f / 3.0f) * w, 0, w, h));
 	**/
 
-	
+	/**
 	//uses user input
-	clear(Color(0, 0, 0));
+	gl::clear(Color(0, 0, 0));
 
 	for (auto& circle : circles) {
 		circle.draw();
 	}
+	**/
 
+	//loads an image to screen
+	gl::clear(Color(0, 0, 0));
 }
 
 void HelloCinderApp::keyDown(KeyEvent event) {
@@ -119,10 +128,6 @@ void HelloCinderApp::mouseDown(MouseEvent event) {
 		circles.pop_back();
 		return;
 	}
-}
-
-void HelloCinderApp::setup() {
-	Rand::randomize();
 }
 
 void HelloCinderApp::update() {
