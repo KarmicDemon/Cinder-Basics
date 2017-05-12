@@ -1,3 +1,6 @@
 */vc2015/*
 */vc2013/*
 *.jpg
+/Cinder-OpenCV3/*
+*.lib
+*.a
