@@ -37,6 +37,7 @@ void OpenCVFaceDetectionApp::setup() {
 	img = loadImage(loadAsset("hans_and_nan.jpg"));
 	faceClf.load(getAssetPath("face_clf.xml").string());
 
+	setWindowSize(img.getWidth(), img.getHeight());
 	cv::Mat cvImage(toOcv(img, CV_8UC1));
 	vector<cv::Rect> cvFaces;
 	faceClf.detectMultiScale(cvImage, cvFaces);
@@ -45,12 +46,11 @@ void OpenCVFaceDetectionApp::setup() {
 
 void OpenCVFaceDetectionApp::draw() {
 	gl::clear(Color(0, 0, 0)); 
-	gl::draw(gl::Texture::create(img), getWindowBounds());
+	gl::draw(gl::Texture::create(img));
 
 	//gl::color(ColorA(0.0f, 0.0f, 1.0f, 0.2f));
 	for (const auto& face : faces) {
 		gl::drawStrokedRect(face, 2.0f);
-		break;
 	}
 }
 
